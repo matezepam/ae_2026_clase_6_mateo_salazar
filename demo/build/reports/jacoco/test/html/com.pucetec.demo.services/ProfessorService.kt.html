@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfessorService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.pucetec.demo.services</a> &gt; <span class="el_source">ProfessorService.kt</span></div><h1>ProfessorService.kt</h1><pre class="source lang-java linenums">package com.pucetec.demo.services
+
+import com.pucetec.demo.dto.ProfessorRequest
+import com.pucetec.demo.dto.ProfessorResponse
+import com.pucetec.demo.entities.Professor
+import com.pucetec.demo.exceptions.ProfessorNotFoundException
+import com.pucetec.demo.mappers.toEntity
+import com.pucetec.demo.mappers.toResponse
+import com.pucetec.demo.repositories.ProfessorRepository
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L12">@Service</span>
+<span class="fc" id="L13">class ProfessorService(</span>
+<span class="fc" id="L14">    private val professorRepository: ProfessorRepository</span>
+) {
+
+    fun createProfessor(request: ProfessorRequest): ProfessorResponse {
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if (request.name.isBlank()) {</span>
+<span class="fc" id="L19">            throw IllegalArgumentException(&quot;Professor name cannot be blank&quot;)</span>
+        }
+
+<span class="fc" id="L22">        return professorRepository.save(request.toEntity()).toResponse()</span>
+    }
+
+    fun getAllProfessors(): List&lt;ProfessorResponse&gt; {
+<span class="fc" id="L26">        return professorRepository.findAll().map { it.toResponse() }</span>
+    }
+
+    fun getProfessorById(id: Long): ProfessorResponse {
+<span class="fc" id="L30">        val professor = professorRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L31">            ProfessorNotFoundException(&quot;Professor with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L34">        return professor.toResponse()</span>
+    }
+
+    fun updateProfessor(id: Long, request: ProfessorRequest): ProfessorResponse {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (request.name.isBlank()) {</span>
+<span class="fc" id="L39">            throw IllegalArgumentException(&quot;Professor name cannot be blank&quot;)</span>
+        }
+
+<span class="fc" id="L42">        professorRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L43">            ProfessorNotFoundException(&quot;Professor with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L46">        val professorToSave = Professor(</span>
+<span class="fc" id="L47">            id = id,</span>
+<span class="fc" id="L48">            name = request.name,</span>
+<span class="fc" id="L49">            email = request.email</span>
+        )
+
+<span class="fc" id="L52">        return professorRepository.save(professorToSave).toResponse()</span>
+    }
+
+    fun deleteProfessor(id: Long) {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!professorRepository.existsById(id)) {</span>
+<span class="fc" id="L57">            throw ProfessorNotFoundException(&quot;Professor with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L60">        professorRepository.deleteById(id)</span>
+<span class="fc" id="L61">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SubjectService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.pucetec.demo.services</a> &gt; <span class="el_source">SubjectService.kt</span></div><h1>SubjectService.kt</h1><pre class="source lang-java linenums">package com.pucetec.demo.services
+
+import com.pucetec.demo.dto.SubjectRequest
+import com.pucetec.demo.dto.SubjectResponse
+import com.pucetec.demo.entities.Subject
+import com.pucetec.demo.exceptions.ProfessorNotFoundException
+import com.pucetec.demo.exceptions.SubjectNotFoundException
+import com.pucetec.demo.mappers.toResponse
+import com.pucetec.demo.repositories.ProfessorRepository
+import com.pucetec.demo.repositories.SubjectRepository
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L13">@Service</span>
+<span class="fc" id="L14">class SubjectService(</span>
+<span class="fc" id="L15">    private val subjectRepository: SubjectRepository,</span>
+<span class="fc" id="L16">    private val professorRepository: ProfessorRepository</span>
+) {
+
+    fun createSubject(request: SubjectRequest): SubjectResponse {
+<span class="fc" id="L20">        validateSubject(request)</span>
+
+<span class="fc" id="L22">        val professor = professorRepository.findById(request.professorId).orElseThrow {</span>
+<span class="fc" id="L23">            ProfessorNotFoundException(&quot;Professor with id ${request.professorId} was not found&quot;)</span>
+        }
+
+<span class="fc" id="L26">        val subjectToSave = Subject(</span>
+<span class="fc" id="L27">            name = request.name,</span>
+<span class="fc" id="L28">            code = request.code,</span>
+<span class="fc" id="L29">            professor = professor</span>
+        )
+
+<span class="fc" id="L32">        return subjectRepository.save(subjectToSave).toResponse()</span>
+    }
+
+    fun getAllSubjects(): List&lt;SubjectResponse&gt; {
+<span class="fc" id="L36">        return subjectRepository.findAll().map { it.toResponse() }</span>
+    }
+
+    fun getSubjectById(id: Long): SubjectResponse {
+<span class="fc" id="L40">        val subject = subjectRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L41">            SubjectNotFoundException(&quot;Subject with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L44">        return subject.toResponse()</span>
+    }
+
+    fun updateSubject(id: Long, request: SubjectRequest): SubjectResponse {
+<span class="fc" id="L48">        validateSubject(request)</span>
+
+<span class="fc" id="L50">        subjectRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L51">            SubjectNotFoundException(&quot;Subject with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L54">        val professor = professorRepository.findById(request.professorId).orElseThrow {</span>
+<span class="fc" id="L55">            ProfessorNotFoundException(&quot;Professor with id ${request.professorId} was not found&quot;)</span>
+        }
+
+<span class="fc" id="L58">        val subjectToSave = Subject(</span>
+<span class="fc" id="L59">            id = id,</span>
+<span class="fc" id="L60">            name = request.name,</span>
+<span class="fc" id="L61">            code = request.code,</span>
+<span class="fc" id="L62">            professor = professor</span>
+        )
+
+<span class="fc" id="L65">        return subjectRepository.save(subjectToSave).toResponse()</span>
+    }
+
+    fun deleteSubject(id: Long) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!subjectRepository.existsById(id)) {</span>
+<span class="fc" id="L70">            throw SubjectNotFoundException(&quot;Subject with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L73">        subjectRepository.deleteById(id)</span>
+<span class="fc" id="L74">    }</span>
+
+    private fun validateSubject(request: SubjectRequest) {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (request.name.isBlank()) {</span>
+<span class="fc" id="L78">            throw IllegalArgumentException(&quot;Subject name cannot be blank&quot;)</span>
+        }
+
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (request.code.isBlank()) {</span>
+<span class="fc" id="L82">            throw IllegalArgumentException(&quot;Subject code cannot be blank&quot;)</span>
+        }
+<span class="fc" id="L84">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

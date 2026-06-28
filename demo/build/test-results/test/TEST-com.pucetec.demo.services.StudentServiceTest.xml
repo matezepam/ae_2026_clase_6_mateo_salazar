@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.pucetec.demo.services.StudentServiceTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-06-28T04:56:49.787Z" hostname="ASUS" time="0.369">
+  <properties/>
+  <testcase name="getStudentById falla cuando no encuentra registro()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.252"/>
+  <testcase name="createStudent guarda estudiante cuando el request es valido()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.03"/>
+  <testcase name="createStudent rechaza nombres vacios()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.006"/>
+  <testcase name="getStudentById devuelve estudiante existente()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.005"/>
+  <testcase name="updateStudent rechaza nombres vacios()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.006"/>
+  <testcase name="updateStudent guarda los datos nuevos()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.007"/>
+  <testcase name="deleteStudent falla si no existe()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.006"/>
+  <testcase name="getAllStudents devuelve respuestas mapeadas()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.005"/>
+  <testcase name="createStudent rechaza correos ya registrados()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.009"/>
+  <testcase name="getAllStudents devuelve lista vacia sin registros()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.013"/>
+  <testcase name="updateStudent falla si el estudiante no existe()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.008"/>
+  <testcase name="deleteStudent elimina por id cuando existe()" classname="com.pucetec.demo.services.StudentServiceTest" time="0.005"/>
+  <system-out><![CDATA[23:56:50.055 [Test worker] INFO com.pucetec.demo.services.StudentService -- Creating Student Ana Mora
+23:56:50.070 [Test worker] INFO com.pucetec.demo.services.StudentService -- Saved student with id 1
+23:56:50.077 [Test worker] INFO com.pucetec.demo.services.StudentService -- Creating Student    
+23:56:50.114 [Test worker] INFO com.pucetec.demo.services.StudentService -- Getting all students
+23:56:50.123 [Test worker] INFO com.pucetec.demo.services.StudentService -- Creating Student Ana Mora
+23:56:50.125 [Test worker] WARN com.pucetec.demo.services.StudentService -- Attempted to register duplicate email: ana@puce.edu
+23:56:50.134 [Test worker] INFO com.pucetec.demo.services.StudentService -- Getting all students
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

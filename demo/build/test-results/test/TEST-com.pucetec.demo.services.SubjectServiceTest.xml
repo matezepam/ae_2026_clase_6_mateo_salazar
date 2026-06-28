@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.pucetec.demo.services.SubjectServiceTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-06-28T04:56:50.168Z" hostname="ASUS" time="0.118">
+  <properties/>
+  <testcase name="updateSubject rechaza codigo vacio()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.01"/>
+  <testcase name="deleteSubject falla cuando no existe()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.007"/>
+  <testcase name="deleteSubject elimina materia existente()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.006"/>
+  <testcase name="createSubject rechaza codigo vacio()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.008"/>
+  <testcase name="updateSubject rechaza nombre vacio()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.007"/>
+  <testcase name="getSubjectById devuelve materia encontrada()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.008"/>
+  <testcase name="getSubjectById falla si no existe()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.007"/>
+  <testcase name="createSubject guarda la materia valida()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.008"/>
+  <testcase name="createSubject falla si el profesor no existe()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.006"/>
+  <testcase name="getAllSubjects devuelve materias mapeadas()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.005"/>
+  <testcase name="updateSubject falla si la materia no existe()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.007"/>
+  <testcase name="createSubject rechaza nombre vacio()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.005"/>
+  <testcase name="updateSubject falla si el profesor asignado no existe()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.008"/>
+  <testcase name="updateSubject guarda cambios validos()" classname="com.pucetec.demo.services.SubjectServiceTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

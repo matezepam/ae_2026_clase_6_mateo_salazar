@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnrollmentService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.pucetec.demo.services</a> &gt; <span class="el_source">EnrollmentService.kt</span></div><h1>EnrollmentService.kt</h1><pre class="source lang-java linenums">package com.pucetec.demo.services
+
+import com.pucetec.demo.dto.EnrollmentRequest
+import com.pucetec.demo.dto.EnrollmentResponse
+import com.pucetec.demo.dto.EnrollmentUpdateRequest
+import com.pucetec.demo.entities.Enrollment
+import com.pucetec.demo.exceptions.EnrollmentNotFoundException
+import com.pucetec.demo.exceptions.StudentNotFoundException
+import com.pucetec.demo.exceptions.SubjectNotFoundException
+import com.pucetec.demo.mappers.toResponse
+import com.pucetec.demo.repositories.EnrollmentRepository
+import com.pucetec.demo.repositories.StudentRepository
+import com.pucetec.demo.repositories.SubjectRepository
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L16">@Service</span>
+<span class="fc" id="L17">class EnrollmentService(</span>
+<span class="fc" id="L18">    private val enrollmentRepository: EnrollmentRepository,</span>
+<span class="fc" id="L19">    private val studentRepository: StudentRepository,</span>
+<span class="fc" id="L20">    private val subjectRepository: SubjectRepository</span>
+) {
+
+    fun createEnrollment(request: EnrollmentRequest): EnrollmentResponse {
+<span class="fc" id="L24">        val student = studentRepository.findById(request.studentId).orElseThrow {</span>
+<span class="fc" id="L25">            StudentNotFoundException(&quot;Student with id ${request.studentId} was not found&quot;)</span>
+        }
+
+<span class="fc" id="L28">        val subject = subjectRepository.findById(request.subjectId).orElseThrow {</span>
+<span class="fc" id="L29">            SubjectNotFoundException(&quot;Subject with id ${request.subjectId} was not found&quot;)</span>
+        }
+
+<span class="fc" id="L32">        val enrollmentToSave = Enrollment(</span>
+<span class="fc" id="L33">            student = student,</span>
+<span class="fc" id="L34">            subject = subject,</span>
+<span class="fc" id="L35">            status = &quot;INSCRITO&quot;</span>
+        )
+
+<span class="fc" id="L38">        return enrollmentRepository.save(enrollmentToSave).toResponse()</span>
+    }
+
+    fun getAllEnrollments(): List&lt;EnrollmentResponse&gt; {
+<span class="fc" id="L42">        return enrollmentRepository.findAll().map { it.toResponse() }</span>
+    }
+
+    fun getEnrollmentById(id: Long): EnrollmentResponse {
+<span class="fc" id="L46">        val enrollment = enrollmentRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L47">            EnrollmentNotFoundException(&quot;Enrollment with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L50">        return enrollment.toResponse()</span>
+    }
+
+    fun updateEnrollment(id: Long, request: EnrollmentUpdateRequest): EnrollmentResponse {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (request.status.isBlank()) {</span>
+<span class="fc" id="L55">            throw IllegalArgumentException(&quot;Enrollment status cannot be blank&quot;)</span>
+        }
+
+<span class="fc" id="L58">        val enrollment = enrollmentRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L59">            EnrollmentNotFoundException(&quot;Enrollment with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L62">        val enrollmentToSave = Enrollment(</span>
+<span class="fc" id="L63">            id = enrollment.id,</span>
+<span class="fc" id="L64">            student = enrollment.student,</span>
+<span class="fc" id="L65">            subject = enrollment.subject,</span>
+<span class="fc" id="L66">            status = request.status,</span>
+<span class="fc" id="L67">            createdAt = enrollment.createdAt</span>
+        )
+
+<span class="fc" id="L70">        return enrollmentRepository.save(enrollmentToSave).toResponse()</span>
+    }
+
+    fun deleteEnrollment(id: Long) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (!enrollmentRepository.existsById(id)) {</span>
+<span class="fc" id="L75">            throw EnrollmentNotFoundException(&quot;Enrollment with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L78">        enrollmentRepository.deleteById(id)</span>
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

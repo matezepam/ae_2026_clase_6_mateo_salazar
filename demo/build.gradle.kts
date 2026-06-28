@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "2.2.21"
 	id("org.springframework.boot") version "3.5.8"
 	id("io.spring.dependency-management") version "1.1.7"
+	jacoco
 }
 
 group = "com.pucetec"
@@ -20,26 +21,76 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	runtimeOnly("com.h2database:h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 kotlin {
 	compilerOptions {
-		freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
+		freeCompilerArgs.addAll(
+			"-Xjsr305=strict",
+			"-Xannotation-default-target=param-property"
+		)
 	}
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+	classDirectories.setFrom(
+		files(
+			classDirectories.files.map {
+				fileTree(it) {
+					include("com/pucetec/demo/services/**")
+				}
+			}
+		)
+	)
+}
+
+tasks.jacocoTestCoverageVerification {
+	dependsOn(tasks.test)
+	classDirectories.setFrom(
+		files(
+			classDirectories.files.map {
+				fileTree(it) {
+					include("com/pucetec/demo/services/**")
+				}
+			}
+		)
+	)
+	violationRules {
+		rule {
+			limit {
+				counter = "LINE"
+				value = "COVEREDRATIO"
+				minimum = "1.0".toBigDecimal()
+			}
+			limit {
+				counter = "BRANCH"
+				value = "COVEREDRATIO"
+				minimum = "1.0".toBigDecimal()
+			}
+		}
+	}
+}
+
+tasks.check {
+	dependsOn(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
 }

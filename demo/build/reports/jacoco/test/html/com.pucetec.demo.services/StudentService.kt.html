@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StudentService.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">demo</a> &gt; <a href="index.source.html" class="el_package">com.pucetec.demo.services</a> &gt; <span class="el_source">StudentService.kt</span></div><h1>StudentService.kt</h1><pre class="source lang-java linenums">package com.pucetec.demo.services
+
+import com.pucetec.demo.dto.StudentRequest
+import com.pucetec.demo.dto.StudentResponse
+import com.pucetec.demo.exceptions.EmailAlreadyExistsException
+import com.pucetec.demo.exceptions.StudentNotFoundException
+import com.pucetec.demo.entities.Student
+import com.pucetec.demo.mappers.toEntity
+import com.pucetec.demo.mappers.toResponse
+import com.pucetec.demo.repositories.StudentRepository
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+
+<span class="fc" id="L14">@Service</span>
+<span class="fc" id="L15">class StudentService(</span>
+<span class="fc" id="L16">    private val studentRepository: StudentRepository</span>
+) {
+
+<span class="fc" id="L19">    private val logger = LoggerFactory.getLogger(StudentService::class.java)</span>
+
+    fun createStudent(request: StudentRequest): StudentResponse {
+<span class="fc" id="L22">        logger.info(&quot;Creating Student ${request.name}&quot;)</span>
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (request.name.isBlank()) {</span>
+<span class="fc" id="L25">            throw IllegalArgumentException(&quot;Student name cannot be blank&quot;)</span>
+        }
+
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        if (studentRepository.existsByEmail(request.email)) {</span>
+<span class="fc" id="L29">            logger.warn(&quot;Attempted to register duplicate email: ${request.email}&quot;)</span>
+<span class="fc" id="L30">            throw EmailAlreadyExistsException(&quot;El correo ${request.email} ya está registrado.&quot;)</span>
+        }
+
+<span class="fc" id="L33">        val studentToSave = request.toEntity()</span>
+
+<span class="fc" id="L35">        val savedStudent = studentRepository.save(studentToSave)</span>
+
+<span class="fc" id="L37">        logger.info(&quot;Saved student with id ${savedStudent.id}&quot;)</span>
+
+<span class="fc" id="L39">        return savedStudent.toResponse()</span>
+    }
+
+    fun getAllStudents(): List&lt;StudentResponse&gt; {
+<span class="fc" id="L43">        logger.info(&quot;Getting all students&quot;)</span>
+
+<span class="fc" id="L45">        val savedStudents = studentRepository.findAll()</span>
+
+<span class="fc" id="L47">        return savedStudents.map { it.toResponse() }</span>
+    }
+
+    fun getStudentById(id: Long): StudentResponse {
+<span class="fc" id="L51">        val student = studentRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L52">            StudentNotFoundException(&quot;Student with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L55">        return student.toResponse()</span>
+    }
+
+    fun updateStudent(id: Long, request: StudentRequest): StudentResponse {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (request.name.isBlank()) {</span>
+<span class="fc" id="L60">            throw IllegalArgumentException(&quot;Student name cannot be blank&quot;)</span>
+        }
+
+<span class="fc" id="L63">        studentRepository.findById(id).orElseThrow {</span>
+<span class="fc" id="L64">            StudentNotFoundException(&quot;Student with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L67">        val studentToSave = Student(</span>
+<span class="fc" id="L68">            id = id,</span>
+<span class="fc" id="L69">            name = request.name,</span>
+<span class="fc" id="L70">            email = request.email</span>
+        )
+
+<span class="fc" id="L73">        return studentRepository.save(studentToSave).toResponse()</span>
+    }
+
+    fun deleteStudent(id: Long) {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (!studentRepository.existsById(id)) {</span>
+<span class="fc" id="L78">            throw StudentNotFoundException(&quot;Student with id $id was not found&quot;)</span>
+        }
+
+<span class="fc" id="L81">        studentRepository.deleteById(id)</span>
+<span class="fc" id="L82">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
